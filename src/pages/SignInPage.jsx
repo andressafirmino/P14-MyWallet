@@ -17,7 +17,7 @@ export default function SignInPage() {
   function login(e) {
     e.preventDefault();
 
-    const url = `${URL}`;
+    const url = `${import.meta.env.VITE_API_URL}/`;
     const login = {email, password};
 
     const promise = axios.post(url, login);
@@ -33,9 +33,9 @@ export default function SignInPage() {
     <SingInContainer>
       <form onSubmit={login}>
         <MyWalletLogo />
-        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} />
-        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} />
-        <button type="submit" disabled={disabled}>
+        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} data-test="email"/>
+        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} data-test="password"/>
+        <button type="submit" disabled={disabled} data-test="sign-in-submit">
           {disabled ? (
             <ThreeDots width={32} height={21} border-radius={4.5} background-color="#A328D6" color="#FFFFFF" font-size={9} />
           ) : (

@@ -23,7 +23,7 @@ export default function SignUpPage() {
       return alert("As senhas são diferentes!");
     }
 
-    const url = `http://localhost:5000/cadastro`;
+    const url = `${import.meta.env.VITE_API_URL}/cadastro`;
     const newSignUp = {name, email, password};
     const promise = axios.post(url, newSignUp)
     setDisabled(true)
@@ -39,11 +39,11 @@ export default function SignUpPage() {
     <SingUpContainer>
       <form onSubmit={signUp}>
         <MyWalletLogo />
-        <input placeholder="Nome" type="text" required value={name} onChange={(e) => setName(e.target.value)} disabled={disabled} />
-        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} />
-        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} />
-        <input placeholder="Confirme a senha" type="password" autoComplete="new-password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={disabled} />
-        <button type='submit' disabled={disabled}>
+        <input placeholder="Nome" type="text" required value={name} onChange={(e) => setName(e.target.value)} disabled={disabled} data-test="name"/>
+        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} data-test="email"/>
+        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} data-test="password"/>
+        <input placeholder="Confirme a senha" type="password" autoComplete="new-password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={disabled} data-test="conf-password"/>
+        <button type='submit' disabled={disabled} data-test="sign-up-submit">
           {disabled ? (
             <ThreeDots width={32} height={21} border-radius={4.5} background-color="#A328D6" color="#FFFFFF" font-size={9} />
           ) : (
