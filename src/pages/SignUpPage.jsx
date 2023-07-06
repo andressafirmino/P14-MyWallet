@@ -23,7 +23,7 @@ export default function SignUpPage() {
       return alert("As senhas são diferentes!");
     }
 
-    const url = `${URL}/cadastro`;
+    const url = `http://localhost:5000/cadastro`;
     const newSignUp = {name, email, password};
     const promise = axios.post(url, newSignUp)
     setDisabled(true)
