@@ -25,8 +25,8 @@ export default function SignUpPage() {
 
     const url = `${import.meta.env.VITE_API_URL}/cadastro`;
     const newSignUp = {name, email, password};
-    const promise = axios.post(url, newSignUp)
-    setDisabled(true)
+    const promise = axios.post(url, newSignUp);
+    setDisabled(true);
     promise.then( () => navigate('/'));
     promise.catch(e => {
       alert(e.response.data.message);

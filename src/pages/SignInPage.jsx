@@ -27,6 +27,10 @@ export default function SignInPage() {
       setName(response.data.name); */
       navigate('/home');
     })
+    promise.catch(e => {
+      alert(e.response.data.message);
+      setDisabled(false);
+    })
   }
 
   return (
