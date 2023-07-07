@@ -23,11 +23,13 @@ export default function SignInPage() {
     const promise = axios.post(url, login);
     setDisabled(true);
     promise.then( response => {
-      /* setToken(response.data.token);
-      setName(response.data.name); */
+      console.log(response.data);
+      setToken(response.data.token);
+      //setName(response.data.name); 
       navigate('/home');
     })
     promise.catch(e => {
+      console.log(e);
       alert(e.response.data.message);
       setDisabled(false);
     })
