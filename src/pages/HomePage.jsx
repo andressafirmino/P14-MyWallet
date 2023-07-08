@@ -1,12 +1,16 @@
-import styled from "styled-components"
-import { BiExit } from "react-icons/bi"
-import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import styled from "styled-components";
+import { BiExit } from "react-icons/bi";
+import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import { useContext } from "react";
+import { AuthContext } from "../context/auth";
 
 export default function HomePage() {
+
+  const {name} = useContext(AuthContext);
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
+        <h1>Olá, {name}</h1>
         <BiExit />
       </Header>
 
