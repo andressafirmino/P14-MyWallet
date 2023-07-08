@@ -1,12 +1,31 @@
 import styled from "styled-components";
 import { BiExit } from "react-icons/bi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/auth";
+import axios from "axios";
 
 export default function HomePage() {
 
-  const {name} = useContext(AuthContext);
+  const { name, user } = useContext(AuthContext);
+  const [operations, setOperations] = useState([]);
+
+  useEffect(() => {
+    const url = `${import.meta.env.VITE_API_URL}/home`;
+    const login = { user };
+
+    axios.get(url, login)
+      .then(response =>
+        setOperations(response.data.operations))
+      .catch(e => alert(e.response.data.message));
+  }, [])
+  function cashOutflow() {
+    console.log("foi");
+  }
+  function cashIncome() {
+    console.log("aqui também foi");
+  }
+
   return (
     <HomeContainer>
       <Header>
@@ -17,36 +36,46 @@ export default function HomePage() {
       <TransactionsContainer>
         <ul>
           <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
+            {operations.length === 0 && (
+              <div>
+                <span>Não há registros de entrada ou saída</span>
+              </div>
+            )}
           </ListItemContainer>
 
           <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positivo"}>3000,00</Value>
+            {operations.length > 0 && (
+              <div>
+                <div>
+                  <span>30/11</span>
+                  <strong>Almoço mãe</strong>
+                </div>
+                <Value color={"negativo"}>120,00</Value>
+                <div>
+                  <span>15/11</span>
+                  <strong>Salário</strong>
+                </div>
+                <Value color={"positivo"}>3000,00</Value>
+                <article>
+                  <strong>Saldo</strong>
+                  <Value color={"positivo"}>2880,00</Value>
+                </article>
+              </div>
+
+            )}
+
           </ListItemContainer>
         </ul>
 
-        <article>
-          <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
-        </article>
       </TransactionsContainer>
-
 
       <ButtonsContainer>
         <button>
-          <AiOutlinePlusCircle />
+          <AiOutlinePlusCircle onClick={cashOutflow} />
           <p>Nova <br /> entrada</p>
         </button>
         <button>
-          <AiOutlineMinusCircle />
+          <AiOutlineMinusCircle onClick={cashIncome} />
           <p>Nova <br />saída</p>
         </button>
       </ButtonsContainer>
@@ -121,5 +150,10 @@ const ListItemContainer = styled.li`
   div span {
     color: #c6c6c6;
     margin-right: 10px;
+    div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 `

@@ -8,7 +8,7 @@ import { ThreeDots } from "react-loader-spinner";
 
 export default function SignInPage() {
 
-  const { setToken, setName } = useContext(AuthContext);
+  const { setToken, setName, setUser } = useContext(AuthContext);
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ disabled, setDisabled ] = useState(false);
@@ -24,7 +24,8 @@ export default function SignInPage() {
     setDisabled(true);
     promise.then( response => {
       setToken(response.data.token);
-      setName(response.data.name); 
+      setName(response.data.name);
+      setUser(response.data.user); 
       navigate('/home');
     })
     promise.catch(e => {
