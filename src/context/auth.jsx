@@ -9,7 +9,7 @@ export default function AuthProvider({ children }) {
     const lsName = localStorage.getItem("name");
     const lsEmail = localStorage.getItem("email");
     const [name, setName] = useState(lsName);
-    const [user, setUser] = useState(lsEmail);
+    const [userEmail, setUserEmail] = useState(lsEmail);
     const [token, setToken] = useState(lsToken);
     const [type, setType] = useState('');
     const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function AuthProvider({ children }) {
     return (
         <AuthContext.Provider value={{
             name, setName,
-            user, setUser,
+            userEmail, setUserEmail,
             token, setToken,
             type, setType
         }}>

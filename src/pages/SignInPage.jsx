@@ -23,7 +23,6 @@ export default function SignInPage() {
     const promise = axios.post(url, login);
     setDisabled(true);
     promise.then( response => {
-      console.log(response.data);
       setToken(response.data.token);
       setName(response.data.name);
       setUser(response.data.email); 

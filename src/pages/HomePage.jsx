@@ -8,25 +8,34 @@ import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
 
-  const { name, user, setType } = useContext(AuthContext);
+  const { name, userEmail, setType, token } = useContext(AuthContext);
   const [operations, setOperations] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const url = `${import.meta.env.VITE_API_URL}/home`;
-    const email = { user };
-    console.log(email);
-    const promise = axios.get(url, user)
-      promise.then(response => {
+    const body = {user: userEmail}
+    axios.get(url, body)
+      .then(response => {
         const arrayOperations = response.data.operations;
         setCounter(arrayOperations.lengh);
         arrayOperations.reverse();
         console.log(arrayOperations);
         setOperations(arrayOperations);
       })
-      promise.catch(e => alert(e.response.data.message));
+      .catch(e => alert(e.response.data));
   }, [])
-
+  console.log(token)
+  function logout() {
+    const url = `${import.meta.env.VITE_API_URL}/home`;
+    console.log(token)
+    const token = {token: token}
+    axios.delete(url, token)
+    .then(() => {
+      navigate("/");
+    })
+    .catch(e => console.log(e.response));
+  }
   function cashOutflow() {
     setType("entrada");
     navigate("/nova-transacao/entrada");
@@ -41,7 +50,7 @@ export default function HomePage() {
     <HomeContainer>
       <Header>
         <h1 data-test="user-name">Olá, {name}</h1>
-        <BiExit />
+        <BiExit onClick={logout}/>
       </Header>
 
       <TransactionsContainer>
@@ -90,11 +99,11 @@ export default function HomePage() {
 
       <ButtonsContainer>
         <button>
-          <AiOutlinePlusCircle onClick={cashOutflow} data-test="new-income"/>
+          <AiOutlinePlusCircle onClick={cashOutflow} data-test="new-income" />
           <p>Nova <br /> entrada</p>
         </button>
         <button>
-          <AiOutlineMinusCircle onClick={cashIncome} data-test="new-expense"/>
+          <AiOutlineMinusCircle onClick={cashIncome} data-test="new-expense" />
           <p>Nova <br />saída</p>
         </button>
       </ButtonsContainer>
