@@ -15,6 +15,7 @@ export default function HomePage() {
   useEffect(() => {
     const url = `${import.meta.env.VITE_API_URL}/home`;
     const body = {user: userEmail}
+    console.log(typeof body)
     axios.get(url, body)
       .then(response => {
         const arrayOperations = response.data.operations;
@@ -26,6 +27,7 @@ export default function HomePage() {
       .catch(e => alert(e.response.data));
   }, [])
   console.log(token)
+  console.log(typeof token)
   function logout() {
     const url = `${import.meta.env.VITE_API_URL}/home`;
     console.log(token)
