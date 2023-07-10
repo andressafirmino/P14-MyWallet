@@ -4,78 +4,97 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/auth";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
 
-  const { name, user } = useContext(AuthContext);
+  const { name, user, setType } = useContext(AuthContext);
   const [operations, setOperations] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const url = `${import.meta.env.VITE_API_URL}/home`;
-    const login = { user };
-
-    axios.get(url, login)
-      .then(response =>
-        setOperations(response.data.operations))
-      .catch(e => alert(e.response.data.message));
+    const email = { user };
+    console.log(email);
+    const promise = axios.get(url, user)
+      promise.then(response => {
+        const arrayOperations = response.data.operations;
+        setCounter(arrayOperations.lengh);
+        arrayOperations.reverse();
+        console.log(arrayOperations);
+        setOperations(arrayOperations);
+      })
+      promise.catch(e => alert(e.response.data.message));
   }, [])
+
   function cashOutflow() {
-    console.log("foi");
+    setType("entrada");
+    navigate("/nova-transacao/entrada");
   }
+
   function cashIncome() {
-    console.log("aqui também foi");
+    setType("saida");
+    navigate("/nova-transacao/saida");
   }
 
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, {name}</h1>
+        <h1 data-test="user-name">Olá, {name}</h1>
         <BiExit />
       </Header>
 
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            {operations.length === 0 && (
+          {operations.length === 0 && (
+            <NoItem>
               <div>
-                <span>Não há registros de entrada ou saída</span>
+                <p>Não há registros de</p>
+                <p> entrada ou saída</p>
               </div>
-            )}
-          </ListItemContainer>
+            </NoItem>
+          )}
 
-          <ListItemContainer>
-            {operations.length > 0 && (
-              <div>
-                <div>
-                  <span>30/11</span>
-                  <strong>Almoço mãe</strong>
-                </div>
-                <Value color={"negativo"}>120,00</Value>
-                <div>
-                  <span>15/11</span>
-                  <strong>Salário</strong>
-                </div>
-                <Value color={"positivo"}>3000,00</Value>
+          {operations.length > 0 && (
+            <>
+              {operations.map((oper) => {
+                return (
+                  <ListItemContainer key={oper._id}>
+                    <div>
+                      <div>
+                        <span>{oper.dateNow} </span>
+                        <p><strong data-test="registry-name">{oper.description}</strong></p>
+                      </div>
+                      <Value color={oper.type} data-test="registry-amount">{oper.value}</Value>
+                    </div>
+                  </ListItemContainer>
+                )
+              })}
+
+              {/*  <div>
+                 <span>15/11</span>
+                 <strong>Salário</strong>
+               </div>
+               <Value color={"positivo"}>3000,00</Value> 
                 <article>
-                  <strong>Saldo</strong>
-                  <Value color={"positivo"}>2880,00</Value>
-                </article>
-              </div>
+                 <strong>Saldo</strong>
+                 <Value color={"positivo"}>2880,00</Value>
+               </article>  */}
+            </>
+          )}
 
-            )}
 
-          </ListItemContainer>
         </ul>
 
       </TransactionsContainer>
 
       <ButtonsContainer>
         <button>
-          <AiOutlinePlusCircle onClick={cashOutflow} />
+          <AiOutlinePlusCircle onClick={cashOutflow} data-test="new-income"/>
           <p>Nova <br /> entrada</p>
         </button>
         <button>
-          <AiOutlineMinusCircle onClick={cashIncome} />
+          <AiOutlineMinusCircle onClick={cashIncome} data-test="new-expense"/>
           <p>Nova <br />saída</p>
         </button>
       </ButtonsContainer>
@@ -136,24 +155,47 @@ const ButtonsContainer = styled.section`
   }
 `
 const Value = styled.div`
+  width: 171px;
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  color: ${(props) => (props.color === "entrada" ? "green" : "red")};
 `
 const ListItemContainer = styled.li`
+  width: calc(100vw);
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
   color: #000000;
-  margin-right: 10px;
-  div span {
-    color: #c6c6c6;
-    margin-right: 10px;
+  div {
+    width: calc(100vw);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     div {
+      width: calc(100vw - 80px);
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
+      span {
+      color: #c6c6c6;
+      margin-right: 10px;
+    }
+    } 
+    
+  }
+`
+const NoItem = styled.li`
+  height: calc(100vw);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  div {
+    margin: auto;
+    align-items: center;
+    p {
+      color: #c6c6c6;
     }
   }
 `
