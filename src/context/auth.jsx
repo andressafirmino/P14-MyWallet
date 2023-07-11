@@ -9,7 +9,7 @@ export default function AuthProvider({ children }) {
     const lsToken = localStorage.getItem("token"); 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [token, setToken] = useState('');
+    const [token, setToken] = useState(lsToken);
     const [type, setType] = useState('');
     const navigate = useNavigate();
     const location = useLocation();

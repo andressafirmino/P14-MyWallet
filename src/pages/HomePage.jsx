@@ -26,7 +26,7 @@ export default function HomePage() {
     const url = `${import.meta.env.VITE_API_URL}/home`;
     axios.get(url, {
       headers: { authorization: `Bearer ${token}` },
-      params: { email: email }
+      params: { email }
     })
       .then(response => {
         console.log(response);
@@ -44,7 +44,6 @@ export default function HomePage() {
 
   
   function total() {
-    // isso serve pra fazer o calculo final do total 
 
     let balance = 0;
     operations.forEach(item => {
@@ -63,7 +62,7 @@ export default function HomePage() {
     axios.delete(url, {
       headers: { authorization: `Bearer ${token}` }
     })
-      .then(response => {
+      .then(() => {
         localStorage.clear();
         navigate("/");
       })
