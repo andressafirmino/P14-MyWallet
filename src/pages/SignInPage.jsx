@@ -27,11 +27,6 @@ export default function SignInPage() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("name", response.data.name);
       localStorage.setItem("email", email);
-      /* localStorage.setItem("user", JSON.stringify({
-        token: response.data.token,
-        name: response.data.name,
-        email: response.data.email
-      })); */
       navigate('/home');
     })
     promise.catch(e => {

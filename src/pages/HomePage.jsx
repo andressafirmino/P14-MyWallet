@@ -22,7 +22,7 @@ export default function HomePage() {
       setName(storedName);
       setEmail(storedEmail);
     }
-    
+    console.log(email);
     const url = `${import.meta.env.VITE_API_URL}/home`;
     axios.get(url, {
       headers: { authorization: `Bearer ${token}` },

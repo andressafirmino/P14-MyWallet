@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function TransactionsPage() {
 
-  const { type, user, token, email } = useContext(AuthContext);
+  const { type, token, email } = useContext(AuthContext);
   const [value, setValue] = useState('');
   const [description, setDescription] = useState('');
   const [disabled, setDisabled] = useState(false);
