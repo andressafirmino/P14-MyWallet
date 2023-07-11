@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function TransactionsPage() {
 
-  const { type, user } = useContext(AuthContext);
+  const { type, user, token, email } = useContext(AuthContext);
   const [value, setValue] = useState('');
   const [description, setDescription] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -34,9 +34,9 @@ export default function TransactionsPage() {
     const url = `${import.meta.env.VITE_API_URL}/nova-transacao/${type}`;
     //const newTransaction = { value, description, user };
     const auth = {
-      headers: { authorization: `Bearer ${user.token}` }
+      headers: { authorization: `Bearer ${token}` }
     }
-    const body = { value, description, email: user.email }
+    const body = { value, description, email: email }
     axios.post(url, body, auth)
       .then(() => {
         navigate('/home');

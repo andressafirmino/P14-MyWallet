@@ -8,28 +8,30 @@ import { ThreeDots } from "react-loader-spinner";
 
 export default function SignInPage() {
 
-  const { user, setUser } = useContext(AuthContext);
-  const [ email, setEmail ] = useState('');
-  const [ password, setPassword ] = useState('');
-  const [ disabled, setDisabled ] = useState(false);
+  const { setName, setToken } = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
 
   function login(e) {
     e.preventDefault();
 
     const url = `${import.meta.env.VITE_API_URL}/`;
-    const login = {email, password};
+    const login = { email, password };
     const promise = axios.post(url, login);
     setDisabled(true);
-    promise.then( response => {
-      localStorage.setItem("user", JSON.stringify({
+    promise.then(response => {
+      setName(response.data.name);
+      setToken(response.data.token);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("name", response.data.name);
+      localStorage.setItem("email", email);
+      /* localStorage.setItem("user", JSON.stringify({
         token: response.data.token,
         name: response.data.name,
         email: response.data.email
-      }));
-      /* localStorage.setItem("token", response.data.token);
-      localStorage.setItem("email", response.data.email);
-      localStorage.setItem("name", response.data.name); */
+      })); */
       navigate('/home');
     })
     promise.catch(e => {
@@ -43,8 +45,8 @@ export default function SignInPage() {
     <SingInContainer>
       <form onSubmit={login}>
         <MyWalletLogo />
-        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} data-test="email"/>
-        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} data-test="password"/>
+        <input placeholder="E-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} data-test="email" />
+        <input placeholder="Senha" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} data-test="password" />
         <button type="submit" disabled={disabled} data-test="sign-in-submit">
           {disabled ? (
             <ThreeDots width={32} height={21} border-radius={4.5} background-color="#A328D6" color="#FFFFFF" font-size={9} />

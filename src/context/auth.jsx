@@ -5,13 +5,13 @@ export const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
 
-    const lsUser = JSON.parse(localStorage.getItem("user"));
-    /* const lsName = localStorage.getItem("name");
-    const lsEmail = localStorage.getItem("email"); */
+    const lsUser = JSON.parse(localStorage.getItem("user"));    
+    const lsToken = localStorage.getItem("token"); 
     const [user, setUser] = useState(lsUser);
-    /* const [name, setName] = useState();
-    const [userEmail, setUserEmail] = useState(lsEmail);
-    const [token, setToken] = useState(ls); */
+    console.log(user);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [token, setToken] = useState('');
     const [type, setType] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -26,15 +26,18 @@ export default function AuthProvider({ children }) {
     } ,[]) */
 
     useEffect(() => {
-        if (lsUser === null && location.pathname !== "/cadastro") {
+        if (lsToken === null && location.pathname !== "/cadastro") {
             navigate("/");
-        } else if (lsUser && location.pathname !== "/cadastro") {
+        } else if (lsToken && location.pathname !== "/cadastro") {
             navigate("/home");
         }
     }, [])
     return (
         <AuthContext.Provider value={{
             user, setUser,
+            name, setName,
+            email, setEmail,
+            token, setToken,
             type, setType
         }}>
             {children}

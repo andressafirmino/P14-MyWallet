@@ -8,26 +8,25 @@ import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
 
-  const { user, type, setType } = useContext(AuthContext);
+  const {setType, name, setName, email, setEmail, token, setToken } = useContext(AuthContext);
   const [operations, setOperations] = useState([]);
   const [counter, setCounter] = useState(0);
   const navigate = useNavigate();
 
-  console.log(user)
-  useEffect(() => {
-    const url = `${import.meta.env.VITE_API_URL}/home`;
-    /* const authorization = {
-      headers: {
-        authorization: `Bearer ${user.token}`
-      } 
+  useEffect(() => {   
+    const storedToken = localStorage.getItem("token");
+    const storedName = localStorage.getItem("name");
+    const storedEmail = localStorage.getItem("email");
+    if(storedToken) {
+      setToken(storedToken);
+      setName(storedName);
+      setEmail(storedEmail);
     }
-    const params = {
-      email: user.email
-    } */
-
+    
+    const url = `${import.meta.env.VITE_API_URL}/home`;
     axios.get(url, {
-      headers: { authorization: `Bearer ${user.token}` },
-      params: { email: user.email }
+      headers: { authorization: `Bearer ${token}` },
+      params: { email: email }
     })
       .then(response => {
         console.log(response);
@@ -41,8 +40,9 @@ export default function HomePage() {
 
   useEffect(() => {
     total();
-  }, [operations, counter]);
+  }, [operations, counter]); 
 
+  
   function total() {
     // isso serve pra fazer o calculo final do total 
 
@@ -61,7 +61,7 @@ export default function HomePage() {
   function logout() {
     const url = `${import.meta.env.VITE_API_URL}/home`;
     axios.delete(url, {
-      headers: { authorization: `Bearer ${user.token}` }
+      headers: { authorization: `Bearer ${token}` }
     })
       .then(response => {
         localStorage.clear();
@@ -82,7 +82,9 @@ export default function HomePage() {
   return (
     <HomeContainer>
       <Header>
-        <h1 data-test="user-name">Olá, {user.name}</h1>
+        
+        <h1 data-test="user-name">Olá, {name}</h1>
+      
         <BiExit onClick={logout} data-test="logout"/>
       </Header>
 
@@ -102,21 +104,13 @@ export default function HomePage() {
               {operations.map((oper) => {
                 return (
                   <ListItemContainer key={oper._id}>
-
                     <span color="#c6c6c6">{oper.dateNow} </span>
                     <strong data-test="registry-name" >{oper.description}</strong>
-
                     <Value color={oper.type} data-test="registry-amount">{parseFloat(oper.value).toFixed(2)}</Value>
-
                   </ListItemContainer>
                 )
               })}
 
-              {/* <div>
-                <span>15/11</span>
-                <strong>Salário</strong>
-              </div>
-              <Value color={"positivo"}>3000,00</Value> */}
               <article>
                 <strong>Saldo</strong>
                 {counter > 0 && (
@@ -125,12 +119,9 @@ export default function HomePage() {
                 {counter < 0 && (
                   <Value color={"saida"} data-test="total-amount">{counter}</Value>
                 )}
-
               </article>
             </>
           )}
-
-
         </ul>
 
       </TransactionsContainer>
