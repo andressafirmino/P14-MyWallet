@@ -83,7 +83,7 @@ export default function HomePage() {
     <HomeContainer>
       <Header>
         <h1 data-test="user-name">Olá, {user.name}</h1>
-        <BiExit onClick={logout} />
+        <BiExit onClick={logout} data-test="logout"/>
       </Header>
 
       <TransactionsContainer>
@@ -104,7 +104,7 @@ export default function HomePage() {
                   <ListItemContainer key={oper._id}>
 
                     <span color="#c6c6c6">{oper.dateNow} </span>
-                    <strong data-test="registry-name">{oper.description}</strong>
+                    <strong data-test="registry-name" >{oper.description}</strong>
 
                     <Value color={oper.type} data-test="registry-amount">{parseFloat(oper.value).toFixed(2)}</Value>
 
@@ -120,10 +120,10 @@ export default function HomePage() {
               <article>
                 <strong>Saldo</strong>
                 {counter > 0 && (
-                  <Value color={"entrada"}>{counter}</Value>
+                  <Value color={"entrada"} data-test="total-amount">{counter}</Value>
                 )}
                 {counter < 0 && (
-                  <Value color={"saida"}>{counter}</Value>
+                  <Value color={"saida"} data-test="total-amount">{counter}</Value>
                 )}
 
               </article>
