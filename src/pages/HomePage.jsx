@@ -175,14 +175,15 @@ const TransactionsContainer = styled.article`
   justify-content: space-between;
   overflow-y: auto;
   position: relative;
+  margin-top: 20px;
   article {
     width: calc(100vw - 80px);
     margin: 0 15px 10px;
     display: flex;
     justify-content: space-between; 
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    position: fixed;
+    bottom: 150px;
+    left: 20px;
     strong {
       font-weight: 700;
       text-transform: uppercase;
@@ -221,9 +222,10 @@ const ListItemContainer = styled.li`
   margin-bottom: 8px;
   color: #000000;
   margin-right: 10px;
+  margin-bottom: 20px;
     div span {
       color: #c6c6c6;
-      margin-right: 10px;
+      margin-right: 1px;
     }
      
     

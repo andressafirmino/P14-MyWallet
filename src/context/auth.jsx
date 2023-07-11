@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext({});
 
@@ -14,16 +14,24 @@ export default function AuthProvider({ children }) {
     const [token, setToken] = useState(ls); */
     const [type, setType] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
 
-    useEffect(() =>{
+    /* useEffect(() =>{
         if(lsUser === null) {
             alert("Faça login");
             navigate("/");
         } else {
             navigate("/home");
         }
-    } ,[])
+    } ,[]) */
 
+    useEffect(() => {
+        if (lsUser === null && location.pathname !== "/cadastro") {
+            navigate("/");
+        } else if (lsUser && location.pathname !== "/cadastro") {
+            navigate("/home");
+        }
+    }, [])
     return (
         <AuthContext.Provider value={{
             user, setUser,
