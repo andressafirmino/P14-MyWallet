@@ -8,35 +8,66 @@ import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
 
-  const { name, userEmail, setType, token } = useContext(AuthContext);
+  const { user, type, setType } = useContext(AuthContext);
   const [operations, setOperations] = useState([]);
+  const [counter, setCounter] = useState(0);
   const navigate = useNavigate();
 
+  console.log(user)
   useEffect(() => {
     const url = `${import.meta.env.VITE_API_URL}/home`;
-    const body = {user: userEmail}
-    console.log(typeof body)
-    axios.get(url, body)
+    /* const authorization = {
+      headers: {
+        authorization: `Bearer ${user.token}`
+      } 
+    }
+    const params = {
+      email: user.email
+    } */
+
+    axios.get(url, {
+      headers: { authorization: `Bearer ${user.token}` },
+      params: { email: user.email }
+    })
       .then(response => {
+        console.log(response);
         const arrayOperations = response.data.operations;
-        setCounter(arrayOperations.lengh);
         arrayOperations.reverse();
         console.log(arrayOperations);
         setOperations(arrayOperations);
       })
       .catch(e => alert(e.response.data));
   }, [])
-  console.log(token)
-  console.log(typeof token)
+
+  useEffect(() => {
+    total();
+  }, [operations, counter]);
+
+  function total() {
+    // isso serve pra fazer o calculo final do total 
+
+    let balance = 0;
+    operations.forEach(item => {
+      if (item.type === "saida") {
+        balance -= parseFloat(item.value);
+      } else if (item.type === "entrada") {
+        balance += parseFloat(item.value);
+      }
+    });
+    const balanceTotal = balance.toFixed(2);
+    setCounter(balanceTotal);
+  }
+
   function logout() {
     const url = `${import.meta.env.VITE_API_URL}/home`;
-    console.log(token)
-    const token = {token: token}
-    axios.delete(url, token)
-    .then(() => {
-      navigate("/");
+    axios.delete(url, {
+      headers: { authorization: `Bearer ${user.token}` }
     })
-    .catch(e => console.log(e.response));
+      .then(response => {
+        localStorage.clear();
+        navigate("/");
+      })
+      .catch(e => alert(e.response.data));
   }
   function cashOutflow() {
     setType("entrada");
@@ -51,8 +82,8 @@ export default function HomePage() {
   return (
     <HomeContainer>
       <Header>
-        <h1 data-test="user-name">Olá, {name}</h1>
-        <BiExit onClick={logout}/>
+        <h1 data-test="user-name">Olá, {user.name}</h1>
+        <BiExit onClick={logout} />
       </Header>
 
       <TransactionsContainer>
@@ -71,26 +102,31 @@ export default function HomePage() {
               {operations.map((oper) => {
                 return (
                   <ListItemContainer key={oper._id}>
-                    <div>
-                      <div>
-                        <span>{oper.dateNow} </span>
-                        <p><strong data-test="registry-name">{oper.description}</strong></p>
-                      </div>
-                      <Value color={oper.type} data-test="registry-amount">{oper.value}</Value>
-                    </div>
+
+                    <span color="#c6c6c6">{oper.dateNow} </span>
+                    <strong data-test="registry-name">{oper.description}</strong>
+
+                    <Value color={oper.type} data-test="registry-amount">{parseFloat(oper.value).toFixed(2)}</Value>
+
                   </ListItemContainer>
                 )
               })}
 
-              {/*  <div>
-                 <span>15/11</span>
-                 <strong>Salário</strong>
-               </div>
-               <Value color={"positivo"}>3000,00</Value> 
-                <article>
-                 <strong>Saldo</strong>
-                 <Value color={"positivo"}>2880,00</Value>
-               </article>  */}
+              {/* <div>
+                <span>15/11</span>
+                <strong>Salário</strong>
+              </div>
+              <Value color={"positivo"}>3000,00</Value> */}
+              <article>
+                <strong>Saldo</strong>
+                {counter > 0 && (
+                  <Value color={"entrada"}>{counter}</Value>
+                )}
+                {counter < 0 && (
+                  <Value color={"saida"}>{counter}</Value>
+                )}
+
+              </article>
             </>
           )}
 
@@ -137,9 +173,16 @@ const TransactionsContainer = styled.article`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow-y: auto;
+  position: relative;
   article {
+    width: calc(100vw - 80px);
+    margin: 0 15px 10px;
     display: flex;
-    justify-content: space-between;   
+    justify-content: space-between; 
+    position: absolute;
+    bottom: 0;
+    left: 0;
     strong {
       font-weight: 700;
       text-transform: uppercase;
@@ -172,29 +215,19 @@ const Value = styled.div`
   color: ${(props) => (props.color === "entrada" ? "green" : "red")};
 `
 const ListItemContainer = styled.li`
-  width: calc(100vw);
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
   color: #000000;
-  div {
-    width: calc(100vw);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    div {
-      width: calc(100vw - 80px);
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      span {
+  margin-right: 10px;
+    div span {
       color: #c6c6c6;
       margin-right: 10px;
     }
-    } 
+     
     
-  }
+  
 `
 const NoItem = styled.li`
   height: calc(100vw);

@@ -8,7 +8,7 @@ import { ThreeDots } from "react-loader-spinner";
 
 export default function SignInPage() {
 
-  const { token, setToken, name, setName, setUserEmail } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ disabled, setDisabled ] = useState(false);
@@ -19,17 +19,17 @@ export default function SignInPage() {
 
     const url = `${import.meta.env.VITE_API_URL}/`;
     const login = {email, password};
-    console.log(login)
-    console.log(typeof login)
     const promise = axios.post(url, login);
     setDisabled(true);
     promise.then( response => {
-      setToken(response.data.token);
-      setName(response.data.name);
-      setUserEmail(response.data.email); 
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify({
+        token: response.data.token,
+        name: response.data.name,
+        email: response.data.email
+      }));
+      /* localStorage.setItem("token", response.data.token);
       localStorage.setItem("email", response.data.email);
-      localStorage.setItem("name", response.data.name);
+      localStorage.setItem("name", response.data.name); */
       navigate('/home');
     })
     promise.catch(e => {

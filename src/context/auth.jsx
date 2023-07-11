@@ -5,18 +5,18 @@ export const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
 
-    const lsToken = localStorage.getItem("token");
-    const lsName = localStorage.getItem("name");
-    const lsEmail = localStorage.getItem("email");
-    const [name, setName] = useState(lsName);
+    const lsUser = JSON.parse(localStorage.getItem("user"));
+    /* const lsName = localStorage.getItem("name");
+    const lsEmail = localStorage.getItem("email"); */
+    const [user, setUser] = useState(lsUser);
+    /* const [name, setName] = useState();
     const [userEmail, setUserEmail] = useState(lsEmail);
-    const [token, setToken] = useState(lsToken);
+    const [token, setToken] = useState(ls); */
     const [type, setType] = useState('');
     const navigate = useNavigate();
 
-    console.log(lsToken)
     useEffect(() =>{
-        if(lsToken === null) {
+        if(lsUser === null) {
             alert("Faça login");
             navigate("/");
         } else {
@@ -26,9 +26,7 @@ export default function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={{
-            name, setName,
-            userEmail, setUserEmail,
-            token, setToken,
+            user, setUser,
             type, setType
         }}>
             {children}
